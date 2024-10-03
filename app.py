@@ -53,14 +53,15 @@ def get_fixtures(team):
         
         # Fetch the match date
         date = fixture.find('time', class_='title-8-bold').text if fixture.find('time', class_='title-8-bold') else "Date not found"
-
+        time = fixture.find('time', class_='SimpleMatchCard_simpleMatchCard__infoMessage___NJqW title-8-medium').text if fixture.find('time', class_='SimpleMatchCard_simpleMatchCard__infoMessage___NJqW title-8-medium') else "Date not found"
         if len(teamnames) == 2 and len(logos) == 2:  # Ensure both teams and logos are found
             fixtures_list.append({
                 'team 1': teamnames[0],
                 'team 2': teamnames[1],
                 'team 1 logo': logos[0],
                 'team 2 logo': logos[1],
-                'date': date
+                'date': date,
+                'time': time
             })
 
     return jsonify(fixtures_list)

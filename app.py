@@ -1,7 +1,25 @@
 from flask import Flask, jsonify
 import requests
 from bs4 import BeautifulSoup
-from urllib.parse import unquote  # Import unquote to decode URLs
+from urllib.parse import unquote 
+import urllib.parse
+
+def transform_image_url(original_url):
+    # Parse the original URL
+    parsed_url = urllib.parse.urlparse(original_url)
+    
+    # Extract the 'image' query parameter which contains the original image URL
+    query_params = urllib.parse.parse_qs(parsed_url.query)
+    original_image_url = query_params.get('image', [None])[0]
+    
+    if original_image_url:
+        # Decode the image URL
+        decoded_image_url = urllib.parse.unquote(original_image_url)
+        
+        
+        return decoded_image_url
+    else:
+        return None # Import unquote to decode URLs
 
 app = Flask(__name__)
 
@@ -30,7 +48,7 @@ def get_fixtures(team):
         for team in teams:
             logo = team.find('img', class_='ImageWithSets_of-image__img__pezo7')
             if logo:
-                decoded_logo_url = unquote(logo['src'])  # Decode the logo URL
+                decoded_logo_url = transform_image_url(logo['src'])  # Decode the logo URL
                 logos.append(decoded_logo_url)
         
         # Fetch the match date
